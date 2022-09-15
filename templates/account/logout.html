@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+{% load i18n %}
+
+
+{% block title %}{% trans 'Logout' %}{% endblock title %}
+
+{% block content_title %}
+    <h3 class="my-4 mt-3 text-white">Are you sure you want to <span style="color:red;">Logout ? </span></h3>
+{#    <p class="text-light">We share python and django tips and tricks here</p>#}
+{% endblock content_title %}
+
+
+{% block content %}
+    <div class="container d-flex">
+
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Logout</button>
+            <a href="{% url 'blog_list' %}" class="btn btn-success">No Back</a>
+
+        </form>
+    </div>
+
+{% endblock content %}

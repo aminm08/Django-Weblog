@@ -5,6 +5,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.translation import gettext as _
 
+from .toolfunc import best_users
+
 from .models import BlogPost, Comment
 from .forms import PostForm, CommentForm
 
@@ -15,6 +17,13 @@ class PostListView(generic.ListView):
 
     def get_queryset(self):
         return BlogPost.objects.filter(status='p').order_by('-datetime_modified')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        best_users()
+        return context
+        # context['best_users'] =
+
 
 
 class PostDetailView(generic.DetailView):
@@ -43,7 +52,7 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, generic.CreateView
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
     model = BlogPost
     form_class = PostForm
-    template_name = 'blog/post_create.html'
+    template_name = 'blog/post_update.html'
     success_message = _('your Blog Post Successfully updated')
 
     def test_func(self):

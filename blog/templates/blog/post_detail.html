@@ -15,8 +15,13 @@
                     <p class="small text-muted mt-2">By: {{ post.author }}</p>
                     <p class="mt-2">{{ post.text|safe|linebreaks }}</p>
                     <div>
-                        <a href="{% url 'blog_update' post.id %}" class="btn btn-sm btn-warning">{% trans 'Edit' %}</a>
-                        <a href="{% url 'blog_delete' post.id %}" class="btn btn-sm btn-danger">{% trans 'Delete' %}</a>
+                        {% if user == post.author %}
+
+                            <a href="{% url 'blog_update' post.id %}"
+                               class="btn btn-sm btn-warning">{% trans 'Edit' %}</a>
+                            <a href="{% url 'blog_delete' post.id %}"
+                               class="btn btn-sm btn-danger">{% trans 'Delete' %}</a>
+                        {% endif %}
                     </div>
                 </div>
 

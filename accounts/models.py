@@ -10,3 +10,6 @@ class CustomUser(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('profile')
+
+    def user_blogs(self):
+        return len(self.objects.blogs.all())

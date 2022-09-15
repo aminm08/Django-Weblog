@@ -6,9 +6,11 @@
 
 {% block content %}
     <div class="container">
-        <div class="card shadow my-3 p-5 justify-content-center" >
+        <div class="card shadow my-3 p-5 justify-content-center">
             <h1>{% trans 'Are you Sure?' %}</h1>
-            <p>{% trans 'Are you sure you want to delete ' %} {{ post.title }} {% trans ' post permanently?' %}</p>
+            <p>{% trans 'Are you sure you want to delete ' %} {{ post.title }} {% trans 'post' %} <span
+                    style="font-weight: bold; color:#29a329;">{% trans 'permanently?' %}</span></p>
+
             <form action="" method="POST">
                 {% csrf_token %}
                 <button class="btn btn-danger" type="submit">{% trans 'Yes, Delete' %}</button>

@@ -35,7 +35,8 @@
                     Welcome {{ user.username }} | <a class="text-light" href="{% url 'account_logout' %}">Log out</a>
                     {% if user.profile_picture %}
 
-                        <a href="{% url 'profile' %}"><img src="{{ user.profile_picture.url }}" alt="profile pic" class="nav-profile"></a>
+                        <a href="{% url 'profile' %}"><img src="{{ user.profile_picture.url }}" alt="profile pic"
+                                                           class="nav-profile"></a>
                     {% endif %}
                 </p>
             {% else %}
@@ -46,14 +47,9 @@
     </div>
 </nav>
 
-<div class="container-fluid bg-info">
-    <div class="row py-3">
-        <div class="col-md-8 col-md-10 mx-auto">
-            <h3 class="my-4 mt-3 text-white">Welcome to Python and Django Blog</h3>
-            <p class="text-light">We share python and django tips and tricks here</p>
-        </div>
-    </div>
-</div>
+{% block content_title %}
+
+{% endblock content_title %}
 {% if messages %}
 
     <div class="container mt-2">
