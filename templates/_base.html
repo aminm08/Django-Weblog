@@ -25,11 +25,19 @@
                 <a class="nav-link active" aria-current="page" href="{% url 'blog_list' %}">Home</a>
                 <a class="nav-link" href="{% url 'blog_list' %}">Blog</a>
                 <a class="nav-link" href="{% url 'blog_create' %}">New Post</a>
+                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
             </div>
         </div>
         <div class="mx-2 text-white">
             {% if user.is_authenticated %}
-                Welcome {{ user.username }} | <a class="text-light" href="{% url 'account_logout' %}">Log out</a>
+                <p>
+
+                    Welcome {{ user.username }} | <a class="text-light" href="{% url 'account_logout' %}">Log out</a>
+                    {% if user.profile_picture %}
+
+                        <a href="{% url 'profile' %}"><img src="{{ user.profile_picture.url }}" alt="profile pic" class="nav-profile"></a>
+                    {% endif %}
+                </p>
             {% else %}
                 <a class="text-light" href="{% url 'account_login' %}">Log In</a> |
                 <a class="text-light" href="{% url 'account_signup' %}">Sign Up</a>

@@ -1,7 +1,7 @@
 {% extends '_base.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 
 {% block page_title %}
     {% trans 'Profile' %}
@@ -9,12 +9,22 @@
 
 {% block content %}
     <div class="container mt-3">
+
+
         <h1>{{ user.username }}'s profile</h1>
-        <form action="" method="post">
+        {% if user.profile_picture %}
+
+            <img src="{{ user.profile_picture.url }}" alt="profile pic" class="profile-picture">
+        {% else %}
+            <img src="{% static 'image/profile_blank.png' %}" alt="profile pic" class="profile-picture">
+
+        {% endif %}
+        <form  method="post" class="mt-3" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form|crispy }}
             <button type="submit" class="btn btn-success">{% trans 'Update profile' %}</button>
             <a href="{% url 'account_change_password' %}" class="btn btn-danger">{% trans 'Change password' %}</a>
+            <br> <br>
         </form>
     </div>
 {% endblock content %}
