@@ -2,6 +2,7 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.translation import gettext as _
 
 from .models import BlogPost, Comment
@@ -27,9 +28,10 @@ class PostDetailView(generic.DetailView):
         return context
 
 
-class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, generic.CreateView):
     form_class = PostForm
     template_name = 'blog/post_create.html'
+    success_message = _('your Blog post is now submitted')
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -38,19 +40,27 @@ class PostCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, generic.UpdateView):
     model = BlogPost
     form_class = PostForm
     template_name = 'blog/post_create.html'
+    success_message = _('your Blog Post Successfully updated')
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
 
 
-class PostDeleteView(generic.DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, generic.DeleteView):
     model = BlogPost
     template_name = 'blog/post_delete.html'
     success_url = reverse_lazy('blog_list')
+    success_message = _('your Blog Post successfully deleted')
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
 
 
-class CommentCreateView(SuccessMessageMixin, generic.CreateView):
+class CommentCreateView(LoginRequiredMixin, SuccessMessageMixin, generic.CreateView):
     model = Comment
     form_class = CommentForm
     success_message = _('your comment successfully submitted')
