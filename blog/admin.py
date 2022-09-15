@@ -1,8 +1,13 @@
 from django.contrib import admin
 
-from .models import Post
+from .models import BlogPost, Comment
 
-@admin.register(Post)
+@admin.register(BlogPost)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'status', 'datetime_modified')
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'active', 'datetime_modified')
+
 

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--lr^u)kexol^94@f9w0%)e^2^_6az=ub(7pwtt(nwnkz)09(*4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apss
-    'blog',
     'accounts',
-    'pages'
+    'blog',
+    'pages',
 
     # 3rd party apps
     'allauth',
@@ -155,10 +155,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
-# some settings
-# DEBUG = False
-
-# mesage framework
+# messages framework
 
 MESSAGE_TAGS = {
     co.ERROR: 'danger',

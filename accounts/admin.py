@@ -6,10 +6,16 @@ from .forms import CustomUserChangeForm, CustomUserCreationForm
 from .models import CustomUser
 
 
-@admin.register(CustomUser)
+
 class CustomUserAdmin(UserAdmin):
-    model = get_user_model()
+    list_display = UserAdmin.list_display + ('bio', 'profile_picture','pk')
+    model = CustomUser
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
-    fieldsets = ((None, {"user info": ("bio", "profile_picture",)}))
-    add_fieldsets = ((None, {"user info": ("bio", "profile_picture",)}))
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {"fields": ("bio", "profile_picture",)}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {"fields": ("bio", "profile_picture",)}),
+    )
+admin.site.register(CustomUser, CustomUserAdmin)

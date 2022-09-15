@@ -1,7 +1,8 @@
 {% extends '_base.html' %}
-
+{% load i18n %}
+{% load crispy_forms_tags %}
 {% block page_title %}
-    Add new post
+    {% trans 'Add new post' %}
 {% endblock page_title %}
 
 {% block content %}
@@ -9,13 +10,13 @@
         <div class="row">
             <div class="col-9">
                 <div class="card shadow my-3 p-5">
-                    <h3>Add new Post:</h3>
+                    <h3>{% trans 'Add new Post' %}:</h3>
                     <form method="POST">
                         {% csrf_token %}
-                        <table>
-                            {{ form.as_table }} {# <p>Hello</p><p>Hello</p> #}
-                        </table>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        {{ form|crispy }}
+
+                        <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
                     </form>
                 </div>
             </div>

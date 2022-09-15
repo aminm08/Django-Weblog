@@ -1,79 +1,67 @@
 from django.views import generic
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.contrib.messages.views import SuccessMessageMixin
+from django.utils.translation import gettext as _
 
-from .models import Post
-from .forms import PostForm
+from .models import BlogPost, Comment
+from .forms import PostForm, CommentForm
+
 
 class PostListView(generic.ListView):
     template_name = 'blog/posts_list.html'
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        return Post.objects.filter(status='pub').order_by('-datetime_modified')
+        return BlogPost.objects.filter(status='p').order_by('-datetime_modified')
 
 
 class PostDetailView(generic.DetailView):
-    model = Post
+    model = BlogPost
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 
 class PostCreateView(generic.CreateView):
     form_class = PostForm
     template_name = 'blog/post_create.html'
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.author = self.request.user
+        obj.save()
+        return super().form_valid(form)
+
 
 class PostUpdateView(generic.UpdateView):
-    model = Post
+    model = BlogPost
     form_class = PostForm
     template_name = 'blog/post_create.html'
 
 
 class PostDeleteView(generic.DeleteView):
-    model = Post
+    model = BlogPost
     template_name = 'blog/post_delete.html'
-    success_url = reverse_lazy('posts_list')
-
-# functional view -> view def
-# class-based view
-
-# def post_list_view(request):
-#     posts_list = Post.objects.filter(status='pub').order_by('-datetime_modified')
-#     return render(request, 'blog/posts_list.html', {'posts_list': posts_list})
+    success_url = reverse_lazy('blog_list')
 
 
-# def post_detail_view(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#     return render(request, 'blog/post_detail.html', {'post': post})
+class CommentCreateView(SuccessMessageMixin, generic.CreateView):
+    model = Comment
+    form_class = CommentForm
+    success_message = _('your comment successfully submitted')
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
 
-# def post_create_view(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('posts_list')
-#
-#     else: # Get Request
-#         form = PostForm()
-#
-#     return render(request, 'blog/post_create.html', context={'form': form})
+        blog_id = int(self.kwargs['blog_id'])
+        blogpost = get_object_or_404(BlogPost, pk=blog_id)
 
-# def post_update_view(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#     form = PostForm(request.POST or None, instance=post)
-#
-#     if form.is_valid():
-#         form.save()
-#         return redirect('posts_list')
-#
-#     return render(request, 'blog/post_create.html', context={'form': form})
+        obj.author = self.request.user
+        obj.Blog = blogpost
 
-# def post_delete_view(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('posts_list')
-#
-#     return render(request, 'blog/post_delete.html', context={'post': post})
+        return super().form_valid(form)
